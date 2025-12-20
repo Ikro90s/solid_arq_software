@@ -78,5 +78,80 @@ curl -X POST http://localhost:3000/orders \
 
 ---
 
+# Princípios SOLID Aplicados no Projeto
 
+Este repositório demonstra a aplicação dos princípios **SOLID** em um sistema de pedidos, com uma arquitetura organizada, modular e testável.
+
+---
+
+## 1. SRP (Single Responsibility Principle) - Responsabilidade Única
+
+**Antes:**  
+O `OrderController` era um "faz-tudo": recebia a requisição, calculava frete, lidava com banco de dados, processava pagamento e enviava e-mail.
+
+**Depois:**  
+Fragmentamos as responsabilidades em camadas especializadas:
+
+- **Controller:** Apenas recebe a requisição HTTP e envia a resposta.  
+- **OrderService:** Orquestra o fluxo de negócio (o "cérebro" da operação).  
+- **NotificationService:** Cuida apenas da lógica de notificação (assunto, corpo do e-mail).  
+- **Repository:** Cuida apenas de salvar/buscar dados.  
+- **Provider:** Cuida apenas da integração técnica (ex: conectar no servidor de e-mail).
+
+---
+
+## 2. OCP (Open/Closed Principle) - Aberto para Extensão, Fechado para Modificação
+
+**Problema antigo:**  
+Para adicionar um método de pagamento como "Pix", era necessário alterar o Controller/Service adicionando condicionais.
+
+**Solução:**  
+Criamos a interface `IPaymentMethod`:
+
+- Cada método de pagamento (`CreditCardPayment`, `PixPayment`, `DebitCardPayment`) é uma classe isolada.  
+- Para adicionar um novo método (ex: "Boleto"), basta criar uma nova classe.  
+- O `OrderService` não muda; ele apenas chama o método `.process()` do pagamento recebido.
+
+---
+
+## 3. LSP (Liskov Substitution Principle) - Substituição de Liskov
+
+**Problema antigo:**  
+O código verificava `if (product.type === 'physical')` para cobrar frete, obrigando o sistema a conhecer detalhes de cada tipo de produto.
+
+**Solução:**  
+Criamos a classe base `Product` com o método `calculateFreight()`:
+
+- **PhysicalProduct:** Implementa o cálculo real.  
+- **DigitalProduct:** Retorna zero.  
+
+**Resultado:**  
+O `OrderService` trata todos como `Product` sem perguntar o tipo; cada produto calcula seu próprio frete. Substituições funcionam sem quebrar a lógica.
+
+---
+
+## 4. DIP (Dependency Inversion Principle) - Inversão de Dependência
+
+**Antes:**  
+O código dependia diretamente do `PrismaClient` ou `nodemailer`.
+
+**Depois:**  
+O `OrderService` agora depende de interfaces (`IOrderRepository`, `IMailProvider`):
+
+- O serviço não sabe se o banco é Prisma ou se o e-mail é Ethereal.  
+- Permite trocar banco de dados ou serviço de e-mail (ex: AWS SES) sem alterar a regra de negócio.
+
+---
+
+## Pulo do Gato: ProductFactory
+
+Para interligar tudo:
+
+1. A factory verifica o campo `type` nos dados vindos do banco.  
+2. Instancia a classe correta (`PhysicalProduct` ou `DigitalProduct`).  
+3. Retorna um objeto rico com métodos, não apenas dados.
+
+---
+
+## Estrutura Cirúrgica do Projeto
 
