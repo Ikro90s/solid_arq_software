@@ -146,6 +146,3 @@ Para interligar tudo:
 2. Instancia a classe correta (`PhysicalProduct` ou `DigitalProduct`).  
 3. Retorna um objeto rico com métodos, não apenas dados.
 
-
-## Estrutura Cirúrgica do Projeto
-
