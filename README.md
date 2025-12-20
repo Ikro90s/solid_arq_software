@@ -80,7 +80,7 @@ curl -X POST http://localhost:3000/orders \
 
 # Princípios SOLID Aplicados no Projeto
 
-Este repositório demonstra a aplicação dos princípios **SOLID** em um sistema de pedidos, com uma arquitetura organizada, modular e testável.
+Este texto demonstra a aplicação dos princípios **SOLID** em um sistema de pedidos, com uma arquitetura organizada, modular e testável.
 
 
 ## 1. SRP (Single Responsibility Principle) - Responsabilidade Única
