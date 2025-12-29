@@ -12,7 +12,7 @@ export class PhysicalProduct extends Product {
   }
 
   calculateFreight(): number {
-    // Frete fixo simples como no código original
+
     return 10;
   }
 }
