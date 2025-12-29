@@ -15,7 +15,6 @@ const notificationService = new NotificationService(mailProvider);
 const orderService = new OrderService(orderRepository, notificationService);
 const orderController = new OrderController(orderService);
 
-// Rota única que faz tudo
 app.post('/orders', orderController.processOrder);
 
 export default app;
