@@ -8,7 +8,6 @@ import { EtherealMailProvider } from './providers/EtherealMailProvider';
 const app = express();
 app.use(express.json());
 
-// Injeção de Dependências manual para simplificar
 const orderRepository = new PrismaOrderRepository();
 const mailProvider = new EtherealMailProvider();
 const notificationService = new NotificationService(mailProvider);
