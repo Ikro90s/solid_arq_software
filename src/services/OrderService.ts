@@ -13,13 +13,13 @@ export class OrderService {
   async execute(data: { customer: string, items: any[], paymentMethod: IPaymentMethod, paymentDetails: any }) {
     const { customer, items, paymentMethod, paymentDetails } = data;
 
-    // 1. VALIDAÇÃO
+    //  VALIDAÇÃO
     if (!items || items.length === 0) {
       logger.error('Tentativa de pedido sem itens');
       throw new Error('Carrinho vazio');
     }
 
-    // 2. CÁLCULO DE PREÇO E ESTOQUE
+    //  CÁLCULO DE PREÇO E ESTOQUE
     let totalAmount = 0;
     let productsDetails = [];
 
@@ -38,10 +38,10 @@ export class OrderService {
       productsDetails.push({ ...productData, quantity: item.quantity });
     }
 
-    // 3. PROCESSAMENTO DE PAGAMENTO
+    //  PROCESSAMENTO DE PAGAMENTO
     await paymentMethod.process(totalAmount, paymentDetails);
 
-    // 4. PERSISTÊNCIA
+    //  PERSISTÊNCIA
     const order = await this.orderRepository.save({
       customer,
       items: JSON.stringify(productsDetails),
@@ -49,7 +49,7 @@ export class OrderService {
       status: 'confirmed'
     });
 
-    // 5. NOTIFICAÇÃO
+    //  NOTIFICAÇÃO
     const notificationInfo = await this.notificationService.sendOrderConfirmation(customer, order, productsDetails);
 
     return {
