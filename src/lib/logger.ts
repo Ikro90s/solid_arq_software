@@ -1,6 +1,5 @@
 import winston from 'winston';
 
-// Configura logs para aparecerem no Console e em um arquivo app.log
 const logger = winston.createLogger({
   level: 'info',
   format: winston.format.combine(
